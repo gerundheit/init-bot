@@ -11,6 +11,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 client = discord.Client()
 initiative_entries = []
+rolled_initiative_values = []
 
 #Basic die roller
 def d20():
@@ -40,9 +41,15 @@ async def on_message(message):
         await message.channel.send('Added {} to combat.'.format(command[1]))
         await message.channel.send(initiative_entries)
 
-    #Rolls initiative for all characters entered, creates a new dictionary of chracters and roll values, and posts/pins post
+    #Rolls initiative for all characters entered, creates a new dictionary of characters and roll values, and posts/pins post
     if message.content.startswith('$roll'):
         await message.channel.send('Here\'s the part where I roll initiative.')
+        for entry in initiative_entries:
+            rolled_value = int(roll) + entry[1]
+        #This is currently raising TypeError: 'int' object is not subscriptable
+            rolled_initiative_values.append(rolled_value)
+        rolled_initiative_values.sort(key=lambda a: a[1], reverse=True)
+        await message.channel.send(rolled_initiative_values)
 
     #Allows users to insert late-coming characters in the middle of combat, either with a pre-specified iniaitive roll, or rolling for them. [Note: rolling for them not yet implemented.]
     #if message.content.startswith('$new-challenger'):
