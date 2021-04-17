@@ -25,8 +25,9 @@ async def on_ready():
 #Prompts that will cause Init-Bot to respond to text messages in channels.
 @client.event
 async def on_message(message):
-    if message.author == client.user:
-        return
+    #Pins message to channel if it's an initiative order posting
+    if message.author == client.user and ':' in message.content:
+        await message.pin()
 
     if message.content.startswith('$hello'):
         await message.channel.send('Hello!')
@@ -40,11 +41,11 @@ async def on_message(message):
         except:
             initiative_entries.append((command[1], bonus))
         await message.channel.send('Added {} to combat.'.format(command[1]))
-        await message.channel.send(initiative_entries)
+        #await message.channel.send(initiative_entries)
 
     #Rolls initiative for all characters entered, creates a new dictionary of characters and roll values, and posts/pins post
     if message.content.startswith('$roll'):
-        await message.channel.send('Here\'s the part where I roll initiative.')
+        await message.channel.send('Rolling...')
         for entry in initiative_entries:
             if 'adv' in entry: #Rolls with advantage
                 roll_1, roll_2 = d20(), d20()
@@ -62,7 +63,6 @@ async def on_message(message):
         output = '\n'.join(output)
         await message.channel.send(output)
 
-
     #Allows users to insert late-coming characters in the middle of combat, either with a pre-specified initiative roll, or rolling for them. [Note: rolling for them not yet implemented.]
     #if message.content.startswith('$new-challenger'):
         #await.message.channel.send('Gotcha, inserting a new guy!')
@@ -76,12 +76,11 @@ async def on_message(message):
 
         $hello — I'll say hello back!
 
-        $i — Command to add someone to my initiative tracker list. After the $i, specify character name, initiative bonus, and whether they get advantage on the roll (if they do, say "adv"; if they don't, you don't need to say so). Example: "$i Fiver 5 adv" means that Fiver gets +5 to initiative rolls and has advantage; "$i Fiver 5" means she has +5 but no advantage. Enter this command once per character, per combat.
+        $i — Command to add someone to my initiative tracker list. After the $i, specify character name (single words only please), initiative bonus, and whether they get advantage on the roll (if they do, say "adv"; if they don't, you don't need to say so). Example: "$i Fiver 5 adv" means that Fiver gets +5 to initiative rolls and has advantage; "$i Fiver 5" means she has +5 but no advantage. Enter this command once per character, per combat.
 
         $roll — Command to have me take all of the characters you've entered, roll their initiative for you, and put them in order. I'll pin the post to make it easy to reference during combat.
-
-        $end — Command to end combat. I'll un-pin the post and wipe the order clean for next time.
         """)
         #Later, add "$new-challenger — Command to insert a new character mid-combat. I'm still learning and initiative order is a lot to remember, so you'll need to roll for the newcomer. After the $new-challenger, specify character name and what they rolled, like this: "$new-challenger Lich Queen 17". I'll update the post to match."
+        #$end — Command to end combat. I'll un-pin the post and wipe the order clean for next time.
 
 client.run(TOKEN)
