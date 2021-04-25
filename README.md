@@ -8,7 +8,7 @@ This program is written in Python 3 and uses [python-dotenv](https://pypi.org/pr
 1. To set up your own instance of Init-Bot, you will first need your own Discord server. Then, get signed up on the [Discord Developer Portal](https://discord.com/developers/docs/intro), where you'll set up an application and, within it, a bot. [RealPython.com](https://realpython.com/how-to-make-a-discord-bot-python/) has a guide on how to do this. Follow the instructions all the way through OAuth2 authentication to add your bot to your server as if it is a user.
 
 2. Once you've got your bot registered and this repository downloaded locally, create a new file called .env in the repository. Inside it, paste the following text.
-> # .env
+> \# .env
 > DISCORD_TOKEN = your-token
 
 3. Replace "your-token" with the Bot Token pasted in from your Discord Developer account. Save.
