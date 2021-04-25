@@ -9,6 +9,7 @@ This program is written in Python 3 and uses [python-dotenv](https://pypi.org/pr
 
 2. Once you've got your bot registered and this repository downloaded locally, create a new file called .env in the repository. Inside it, paste the following text.
 > \# .env
+
 > DISCORD_TOKEN = your-token
 
 3. Replace "your-token" with the Bot Token pasted in from your Discord Developer account. Save.
