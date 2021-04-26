@@ -87,9 +87,11 @@ async def on_message(message):
     #Dice rolls
     if message.content.startswith('$roll'):
         command = str(message.content).split()
-        command = command[1].split('d')
-        number_of_dice = int(command[0])
-        number_of_sides = int(command[1])
+        roll_bonus = command[1].split('+')
+        dice_command = roll_bonus[0].split('d')
+        roll_bonus = int(roll_bonus[-1])
+        number_of_dice = int(dice_command[0])
+        number_of_sides = int(dice_command[1])
         results_list = []
         rolls_sum = 0
         for number in range(0, number_of_dice):
@@ -97,7 +99,8 @@ async def on_message(message):
             results_list.append(result)
         for i in results_list:
             rolls_sum = rolls_sum + i
-        await message.channel.send('That\'s {} ({}).'.format(rolls_sum, results_list))
+        rolls_sum = rolls_sum + roll_bonus
+        await message.channel.send('That\'s {} ({}+{}).'.format(rolls_sum, results_list, roll_bonus))
 
     #Clears the initiative order from the list variable and unpins the previous message for a fresh start
     if message.content.startswith('$end'):
@@ -107,11 +110,11 @@ async def on_message(message):
 
 #Displays help text/manual in the text channel.
     if message.content.startswith('$manual'):
-        await message.channel.send("""I'm here to help you keep track of combat initiative, and I understand the following commands:
+        await message.channel.send("""I'm here to roll dice and to help you keep track of combat initiative, and I understand the following commands:
 
         $hello : I'll say hello back!
 
-        $roll : Command to roll any number of any type of dice, e.g. "$roll 8d6" or "$roll 1d20". For simple rolls of any kind, such as attack rolls or damage pools. Does not add any bonuses.
+        $roll : Command to roll any number of any type of dice, e.g. "$roll 8d6" or "$roll 1d20+4". For simple rolls of any kind, such as attack rolls or damage pools. Bonuses can be specified behind a plus mark (no spaces).
 
         $i : Command to add someone to my initiative tracker list. After the $i, specify character name (no spaces please), initiative bonus, and whether they get advantage on the roll (if they do, say "adv"; if they don't, you don't need to say so). Example: "$i Fiver 5 adv" means that Fiver gets +5 to initiative rolls and has advantage; "$i Fiver 5" means she has +5 but no advantage. Enter this command once per character, per combat.
 

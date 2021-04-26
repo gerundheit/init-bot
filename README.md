@@ -1,5 +1,5 @@
 # Init-Bot
-Init-Bot is a simple initiative tracker for 5th Edition D&D groups that play over Discord.
+Init-Bot is a simple dice roller and initiative tracker for 5th Edition D&D groups that play over Discord.
 
 # Libraries
 This program is written in Python 3 and uses [python-dotenv](https://pypi.org/project/python-dotenv/) for Discord bot token management and the [Discord API wrapper](https://discordpy.readthedocs.io/en/stable/index.html).
@@ -20,7 +20,7 @@ This program is written in Python 3 and uses [python-dotenv](https://pypi.org/pr
 These commands can also be viewed in Init-Bot's Discord server while it is running by posting the message "$manual" in a text channel.
 
 - $hello : Init-Bot will say hello back.
-- $roll : Command to roll any number of any type of dice, e.g. "$roll 8d6" or "$roll 1d20". For simple rolls of any kind, such as attack rolls or damage pools. Does not add any bonuses.
+- $roll : Command to roll any number of any type of dice, e.g. "$roll 8d6" or "$roll 1d20+4". For simple rolls of any kind, such as attack rolls or damage pools. Bonuses can be specified behind a plus mark (no spaces).
 - $i : Command to add someone to Init-Bot's initiative tracker list. After the "$i", specify character name (no spaces please), initiative bonus, and whether the character gets advantage on the roll (if they do, say "adv"; if they don't, you don't need to say so). Example: "$i Fiver 5 adv" means that Fiver gets +5 to initiative rolls and has advantage; "$i Fiver 5" means she has +5 but no advantage. Enter this command once per character, per combat as its own message.
 - $go : Command to have Init-Bot take all of the characters you've entered, roll their initiative for you, and put them in order. The bot will pin the post to the channel to make it easy to reference during combat.
 - $add : Command to insert a new character mid-combat. Use the same arguments for names, bonuses, and advantage as you do with the $i command.
