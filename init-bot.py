@@ -111,9 +111,13 @@ async def on_message(message):
 #Misc dice rolls
     if message.content.startswith('$roll'):
         command = str(message.content).split()
-        roll_bonus = command[1].split('+')
-        dice_command = roll_bonus[0].split('d')
-        roll_bonus = int(roll_bonus[-1])
+        if '+' in message.content:
+            roll_bonus = command[1].split('+')
+            dice_command = roll_bonus[0].split('d')
+            roll_bonus = int(roll_bonus[-1])
+        else:
+            roll_bonus = 0
+            dice_command = command[1].split('d')
         number_of_dice = int(dice_command[0])
         number_of_sides = int(dice_command[1])
         results_list = []
