@@ -1,6 +1,5 @@
 # bot.py
 import os
-
 import discord
 from dotenv import load_dotenv
 from random import randint
@@ -50,7 +49,7 @@ async def on_message(message):
     if message.content.startswith('$go'):
         await message.channel.send('Rolling initiative...')
         for entry in initiative_entries:
-            if 'adv' in entry: #Rolls with advantage
+            if 'adv' in entry[2:]: #Rolls with advantage
                 roll_1, roll_2 = dice_roller(20), dice_roller(20)
                 print('{name} rolled {one} and {two}.'.format(name=entry[0], one=roll_1, two=roll_2))
                 if roll_1 >= roll_2:
@@ -61,6 +60,25 @@ async def on_message(message):
             else: #Rolls normally
                 rolled_value = dice_roller(20) + entry[1]
                 rolled_initiative_values.append((entry[0], rolled_value))
+        rolled_initiative_values.sort(key=lambda a: a[1], reverse=True)
+        output = ['{}: {}'.format(result[0], result[1]) for result in rolled_initiative_values]
+        output = '\n'.join(output)
+        await message.channel.send(output)
+
+    if message.content.startswith('$add'):
+        command = str(message.content).split()
+        name, bonus = command[1], int(command[2])
+        if 'adv' in command[2:]: #Rolls with advantage
+            roll_1, roll_2 = dice_roller(20), dice_roller(20)
+            print('{name} rolled {one} and {two}.'.format(name=name, one=roll_1, two=roll_2))
+            if roll_1 >= roll_2:
+                rolled_value = roll_1 + bonus
+            else:
+                rolled_value = roll_2 + bonus
+            rolled_initiative_values.append((name, rolled_value))
+        else: #Rolls normally
+            rolled_value = dice_roller(20) + bonus
+            rolled_initiative_values.append((name, rolled_value))
         rolled_initiative_values.sort(key=lambda a: a[1], reverse=True)
         output = ['{}: {}'.format(result[0], result[1]) for result in rolled_initiative_values]
         output = '\n'.join(output)
@@ -81,16 +99,13 @@ async def on_message(message):
             rolls_sum = rolls_sum + i
         await message.channel.send('That\'s {} ({}).'.format(rolls_sum, results_list))
 
-    #Allows users to insert late-coming characters in the middle of combat, either with a pre-specified initiative roll, or rolling for them. [Note: rolling for them not yet implemented.]
-    #if message.content.startswith('$new-challenger'):
-        #await.message.channel.send('Gotcha, inserting a new guy!')
-
     #Clears the initiative order from the list variable and unpins the previous message for a fresh start
     if message.content.startswith('$end'):
         await message.channel.send('Combat has ended. Clearing the board.')
         del rolled_initiative_values[0:]
         del initiative_entries[0:]
 
+#Displays help text/manual in the text channel.
     if message.content.startswith('$manual'):
         await message.channel.send("""I'm here to help you keep track of combat initiative, and I understand the following commands:
 
@@ -102,8 +117,9 @@ async def on_message(message):
 
         $go : Command to have me take all of the characters you've entered, roll their initiative for you, and put them in order. I'll pin the post to make it easy to reference during combat.
 
+        $add : Command to insert a new character mid-combat. Use the same arguments for names, bonuses, and advantage as you do with the $i command.
+
         $end : Command to end combat. I'll wipe the order clean for next time, but you need to un-pin the old post, please.
         """)
-        #Later, add "$new-challenger — Command to insert a new character mid-combat. I'm still learning and initiative order is a lot to remember, so you'll need to roll for the newcomer. After the $new-challenger, specify character name and what they rolled, like this: "$new-challenger Lich Queen 17". I'll update the post to match."
 
 client.run(TOKEN)
